@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernwebseite: Kräfte – Wiederholung und Vertiefung</title>
+<style>
+  :root{
+    --navy:#1F4E79; --navy-dark:#163A5C; --orange:#E8702A; --light:#EEF3F8;
+    --green:#2E7D32; --green-bg:#DCEFDC; --red:#C62828; --red-bg:#F8DADA;
+    --grey:#667085; --line:#D9E2EC;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Segoe UI",Calibri,Arial,sans-serif;background:#f5f7fa;margin:0;padding:0;color:#1a1a1a;}
+  header{background:var(--navy);color:#fff;padding:22px 16px 18px 16px;text-align:center;}
+  header h1{margin:0 0 4px 0;font-size:24px;}
+  header p{margin:0;font-style:italic;color:var(--light);font-size:14px;}
+
+  nav{position:sticky;top:0;z-index:50;background:var(--navy-dark);display:flex;flex-wrap:wrap;
+      justify-content:center;gap:6px;padding:8px 10px;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+  nav button{background:#2C5E8A;color:#fff;border:none;border-radius:20px;padding:8px 14px;
+      font-size:13.5px;cursor:pointer;font-weight:600;white-space:nowrap;}
+  nav button:hover{background:#376E9F;}
+  nav button.active{background:var(--orange);}
+  nav button .tick{margin-left:5px;}
+
+  #progressWrap{background:#fff;padding:10px 16px;border-bottom:1px solid var(--line);}
+  #progressLabel{font-size:13px;color:var(--grey);margin-bottom:4px;text-align:center;}
+  #progressOuter{max-width:760px;margin:0 auto;background:#E4E9EF;border-radius:8px;height:14px;overflow:hidden;}
+  #progressInner{background:linear-gradient(90deg,var(--orange),#F0954F);height:100%;width:0%;transition:width .3s;}
+
+  main{max-width:820px;margin:0 auto;padding:20px 16px 70px 16px;}
+  section.station{display:none;}
+  section.station.visible{display:block;}
+
+  .stationHead{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .stationNum{background:var(--navy);color:#fff;font-weight:700;font-size:20px;width:42px;height:42px;
+      border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .stationHead h2{margin:0;color:var(--navy);font-size:20px;}
+  .stationHead .time{display:block;font-size:12.5px;color:var(--grey);font-weight:400;margin-top:2px;}
+
+  .infoBox{background:var(--light);border-left:5px solid var(--navy);border-radius:6px;
+      padding:14px 16px;margin-bottom:16px;font-size:15px;line-height:1.55;}
+  .infoBox h3{margin:0 0 6px 0;color:var(--navy);font-size:15.5px;}
+  .infoBox ul{margin:6px 0 0 0;padding-left:20px;}
+
+  .beispielBox{background:#FFF6EC;border-left:5px solid var(--orange);border-radius:6px;
+      padding:14px 16px;margin-bottom:18px;font-size:14.5px;line-height:1.55;}
+  .beispielBox h3{margin:0 0 6px 0;color:#B9560F;font-size:15px;}
+
+  table.factTable{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px;}
+  table.factTable th,table.factTable td{border:1px solid var(--line);padding:6px 9px;text-align:center;}
+  table.factTable th{background:var(--navy);color:#fff;}
+  table.factTable td.label{text-align:left;font-weight:600;}
+
+  .task{background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:18px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.08);border:1px solid var(--line);}
+  .taskTitle{font-weight:700;font-size:15.5px;margin-bottom:12px;color:var(--navy);display:flex;
+      align-items:center;gap:8px;}
+  .taskBadge{background:var(--navy);color:#fff;font-size:11px;font-weight:700;border-radius:4px;
+      padding:2px 7px;letter-spacing:.3px;}
+  .taskBadge.heft{background:var(--orange);}
+
+  .option{display:flex;align-items:center;padding:9px 12px;margin-bottom:7px;border-radius:8px;
+      background:var(--light);cursor:pointer;transition:background .15s,opacity .15s;font-size:14.5px;}
+  .option:hover{background:#dde8f2;}
+  .option input{margin-right:10px;accent-color:var(--navy);}
+  .option.correct{background:var(--green-bg);outline:2px solid var(--green);}
+  .option.incorrect{background:var(--red-bg);outline:2px solid var(--red);}
+  .option.dimmed{opacity:.55;}
+
+  .explanation{display:none;margin-top:10px;padding:11px 13px;background:#FFF8E5;
+      border-left:4px solid var(--orange);border-radius:4px;font-size:13.8px;color:#333;}
+  .explanation.show{display:block;}
+
+  .helpBtn{background:#fff;border:1.5px solid var(--navy);color:var(--navy);border-radius:20px;
+      padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:10px;
+      display:inline-flex;align-items:center;gap:6px;}
+  .helpBtn:hover{background:var(--light);}
+  .helpCard{display:none;margin-top:10px;padding:13px 15px;background:#F2F7FF;
+      border:1.5px dashed var(--navy);border-radius:8px;font-size:13.8px;color:#1a3a5c;line-height:1.6;}
+  .helpCard.show{display:block;}
+  .helpCard .helpLabel{display:block;font-weight:700;color:var(--navy);margin-bottom:4px;}
+  .helpCard ol, .helpCard ul{margin:6px 0 0 0;padding-left:20px;}
+
+  .lueckentext{font-size:15px;line-height:2.1;}
+  .lueckentext input.blank{width:110px;border:none;border-bottom:2px solid var(--navy);
+      background:var(--light);font-size:14.5px;text-align:center;padding:4px 6px;border-radius:4px 4px 0 0;}
+  .lueckentext input.blank.wide{width:190px;}
+  .lueckentext input.blank.ok{border-bottom-color:var(--green);background:var(--green-bg);}
+  .lueckentext input.blank.bad{border-bottom-color:var(--red);background:var(--red-bg);}
+
+  .calcRow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;font-size:14.5px;}
+  .calcRow input[type=text], .calcRow input[type=number]{width:110px;border:2px solid var(--line);
+      border-radius:6px;padding:7px 9px;font-size:14.5px;}
+  .calcRow select{border:2px solid var(--line);border-radius:6px;padding:7px 9px;font-size:14.5px;max-width:280px;}
+  .calcRow input.ok{border-color:var(--green);background:var(--green-bg);}
+  .calcRow input.bad{border-color:var(--red);background:var(--red-bg);}
+  .calcRow select.ok{border-color:var(--green);background:var(--green-bg);}
+  .calcRow select.bad{border-color:var(--red);background:var(--red-bg);}
+
+  .checkBtn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 18px;
+      font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;}
+  .checkBtn:hover{background:var(--navy-dark);}
+
+  .heftTask{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.5;}
+  .heftTask input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--orange);flex-shrink:0;}
+
+  .navFoot{display:flex;justify-content:space-between;margin-top:26px;}
+  .navFoot button{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 18px;
+      font-size:14px;cursor:pointer;}
+  .navFoot button:disabled{opacity:.35;cursor:default;}
+
+  #scoreBar{text-align:center;font-size:17px;font-weight:700;color:var(--navy);margin:6px 0 16px 0;}
+  .reset-link{display:block;text-align:center;margin-top:10px;color:var(--navy);cursor:pointer;
+      text-decoration:underline;font-size:13.5px;}
+
+  .laufzettelTable{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px;}
+  .laufzettelTable th,.laufzettelTable td{border:1px solid var(--line);padding:8px 10px;}
+  .laufzettelTable th{background:var(--navy);color:#fff;text-align:left;}
+  .laufzettelTable td.ok{background:var(--green-bg);}
+
+  .hinweis{background:#FFF8E5;border:1px solid #F0D48A;border-radius:8px;padding:12px 14px;
+      font-size:13.8px;margin-top:14px;line-height:1.5;}
+
+  .sketchBox{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:14px 16px 8px 16px;
+      margin:14px 0;}
+  .sketchBox .sketchLabel{font-size:12px;font-weight:700;color:var(--grey);text-transform:uppercase;
+      letter-spacing:.4px;margin-bottom:6px;}
+  .sketchBox svg{display:block;margin:0 auto;max-width:100%;height:auto;}
+  .sketchCaption{text-align:center;font-size:12.5px;color:var(--grey);margin-top:4px;}
+  .sketchRow{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .sketchRow > div{flex:1 1 220px;min-width:200px;}
+
+  .simBox{background:#F5FAFF;border:1.5px solid #BFD9F2;border-radius:10px;padding:16px 18px;margin:16px 0;}
+  .simBox .simTitle{font-weight:700;color:var(--navy);font-size:14.5px;margin-bottom:10px;
+      display:flex;align-items:center;gap:7px;}
+  .simControls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:12px;font-size:13.5px;}
+  .simControls label{display:flex;flex-direction:column;gap:4px;font-weight:600;color:var(--navy-dark);}
+  .simControls input[type=range]{width:180px;accent-color:var(--navy);}
+  .simBtnGroup{display:flex;gap:6px;flex-wrap:wrap;}
+  .simBtn{background:#fff;border:1.5px solid var(--navy);color:var(--navy);border-radius:8px;
+      padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;}
+  .simBtn:hover{background:var(--light);}
+  .simBtn.active{background:var(--navy);color:#fff;}
+  .simOutput{background:#fff;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:600;
+      color:var(--navy-dark);text-align:center;margin-top:4px;}
+  .simOutput span.big{font-size:17px;color:var(--orange);}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <marker id="arrowNavy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1F4E79"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#E8702A"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/>
+    </marker>
+  </defs>
+</svg>
+
+<header>
+  <h1>Kräfte – Wiederholung und Vertiefung</h1>
+  <p>Physik · Klasse 8, Realschule · Selbstständiges Arbeiten am Tablet und im Heft · 90 Minuten</p>
+</header>
+
+<nav id="mainNav">
+  <button data-target="start">Start</button>
+  <button data-target="station1">1 · Kräfte</button>
+  <button data-target="station2">2 · Federkraftmesser</button>
+  <button data-target="station3">3 · Masse &amp; Gewicht</button>
+  <button data-target="station4">4 · Kräfteaddition</button>
+  <button data-target="station5">5 · Wechselwirkung</button>
+  <button data-target="abschluss">Abschlusscheck</button>
+</nav>
+
+<div id="progressWrap">
+  <div id="progressLabel">Fortschritt: <span id="progressText">0 / 24</span> Aufgaben bearbeitet</div>
+  <div id="progressOuter"><div id="progressInner"></div></div>
+</div>
+
+<main>
+
+<!-- ================= START / LAUFZETTEL ================= -->
+<section class="station visible" id="start">
+  <div class="stationHead">
+    <div class="stationNum">★</div>
+    <h2>Dein Laufzettel für diese Stunde<span class="time">Gesamtzeit: 90 Minuten</span></h2>
+  </div>
+
+  <div class="infoBox">
+    <h3>So arbeitest du heute</h3>
+    <ul>
+      <li>Du bearbeitest fünf Stationen der Reihe nach – jede Station hat einen <strong>Infotext</strong>, ein <strong>Beispiel</strong> und <strong>Aufgaben</strong>.</li>
+      <li>Manche Aufgaben löst du direkt hier auf dem Tablet (Antwort anklicken oder eintippen) – du bekommst sofort eine Rückmeldung.</li>
+      <li>Aufgaben mit dem Zeichen <span class="taskBadge heft">HEFT</span> bearbeitest du in deinem Physikheft. Hake sie hier ab, wenn du fertig bist.</li>
+      <li>Zum Schluss bearbeitest du den <strong>Abschlusscheck</strong> mit 8 Fragen zu allen Themen.</li>
+      <li>Oben siehst du deinen Fortschritt als Balken. Nutze die Buttons in der blauen Leiste, um zwischen den Stationen zu wechseln.</li>
+    </ul>
+  </div>
+
+  <table class="laufzettelTable">
+    <tr><th>Zeit</th><th>Station</th><th>Thema</th><th>Erledigt</th></tr>
+    <tr><td>5 Min</td><td>Einstieg</td><td>Diese Übersicht lesen</td><td><input type="checkbox" onchange="heftCheck(this,'t0')"></td></tr>
+    <tr><td>12 Min</td><td>Station 1</td><td>Kräfte und ihre Wirkungen</td><td id="lzRow1">–</td></tr>
+    <tr><td>15 Min</td><td>Station 2</td><td>Kraft messen – der Federkraftmesser</td><td id="lzRow2">–</td></tr>
+    <tr><td>18 Min</td><td>Station 3</td><td>Masse und Gewichtskraft</td><td id="lzRow3">–</td></tr>
+    <tr><td>18 Min</td><td>Station 4</td><td>Kräfteaddition – Kraft ist gerichtet</td><td id="lzRow4">–</td></tr>
+    <tr><td>12 Min</td><td>Station 5</td><td>Wechselwirkungsprinzip</td><td id="lzRow5">–</td></tr>
+    <tr><td>10 Min</td><td>Abschlusscheck</td><td>8 Fragen zu allem</td><td id="lzRow6">–</td></tr>
+  </table>
+
+  <div class="hinweis">
+    <strong>Tipp:</strong> Lies dir bei jeder Station zuerst den Infotext in Ruhe durch, bevor du die Aufgaben löst.
+    Wenn du unsicher bist, lies das Beispiel noch einmal – dort wird dir der Rechenweg gezeigt.
+  </div>
+
+  <div class="navFoot"><span></span><button onclick="showSection('station1')">Weiter zu Station 1 →</button></div>
+</section>
+
+<!-- ================= STATION 1 ================= -->
+<section class="station" id="station1">
+  <div class="stationHead">
+    <div class="stationNum">1</div>
+    <h2>Kräfte und ihre Wirkungen<span class="time">ca. 12 Minuten</span></h2>
+  </div>
+
+  <div class="infoBox">
+    <h3>Infotext</h3>
+    <p>Eine <strong>Kraft</strong> ist das, was einen Körper <strong>verformt</strong> oder seinen <strong>Bewegungszustand ändert</strong>.
+    Kräfte selbst kann man nicht sehen – nur ihre <strong>Wirkungen</strong> sind sichtbar. Man unterscheidet vor allem drei Wirkungen:</p>
+    <ul>
+      <li><strong>Verformungswirkung:</strong> Ein Körper wird gestaucht, gedehnt oder verbogen (z. B. ein Schwamm wird zusammengedrückt).</li>
+      <li><strong>Bewegungsänderung:</strong> Ein Körper wird schneller, langsamer, bleibt stehen oder setzt sich in Bewegung.</li>
+      <li><strong>Richtungsänderung:</strong> Ein bewegter Körper ändert seine Bewegungsrichtung.</li>
+    </ul>
+    <p>Kräfte werden mit dem Formelzeichen <strong>F</strong> abgekürzt und in der Einheit <strong>Newton (N)</strong> angegeben.</p>
+  </div>
+
+  <div class="sketchBox">
+    <div class="sketchLabel">Skizze · Die drei Wirkungen im Überblick</div>
+    <svg viewBox="0 0 620 150" width="620" height="150">
+      <!-- Verformung -->
+      <g>
+        <circle cx="90" cy="55" r="34" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+        <ellipse cx="90" cy="60" rx="34" ry="20" fill="none" stroke="#E8702A" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <line x1="90" y1="16" x2="90" y2="40" stroke="#E8702A" stroke-width="3" marker-end="url(#arrowOrange)"/>
+        <text x="90" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1F4E79">Verformung</text>
+        <text x="90" y="128" text-anchor="middle" font-size="10.5" fill="#667085">Form ändert sich</text>
+      </g>
+      <!-- Bewegungsänderung -->
+      <g>
+        <rect x="240" y="40" width="30" height="30" rx="4" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+        <line x1="278" y1="55" x2="330" y2="55" stroke="#E8702A" stroke-width="3" marker-end="url(#arrowOrange)"/>
+        <text x="270" y="35" text-anchor="middle" font-size="10" fill="#667085">langsam</text>
+        <text x="330" y="35" text-anchor="middle" font-size="10" fill="#667085">schnell</text>
+        <text x="300" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1F4E79">Bewegungs-</text>
+        <text x="300" y="128" text-anchor="middle" font-size="10.5" fill="#667085">änderung (Tempo)</text>
+      </g>
+      <!-- Richtungsänderung -->
+      <g>
+        <path d="M460,80 Q460,40 500,40" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+        <line x1="460" y1="80" x2="460" y2="55" stroke="#1F4E79" stroke-width="2.5"/>
+        <line x1="500" y1="40" x2="525" y2="40" stroke="#E8702A" stroke-width="3" marker-end="url(#arrowOrange)"/>
+        <circle cx="460" cy="80" r="4" fill="#1F4E79"/>
+        <text x="500" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1F4E79">Richtungs-</text>
+        <text x="500" y="128" text-anchor="middle" font-size="10.5" fill="#667085">änderung</text>
+      </g>
+    </svg>
+    <div class="sketchCaption">Die orangen Pfeile zeigen jeweils, wodurch die Kraft wirkt.</div>
+  </div>
+
+  <div class="beispielBox">
+    <h3>Beispiel</h3>
+    <p>Ein Torwart fängt einen geschossenen Ball: Der Ball wird dabei <em>abgebremst</em> (Bewegungsänderung) und drückt gleichzeitig
+    die Handschuhe des Torwarts leicht ein (Verformung). Hier wirken also <strong>zwei Wirkungen gleichzeitig</strong>.
+    Ein anderes Beispiel: Ein Kran hebt eine Palette an – die Palette setzt sich in Bewegung und wird schneller (Bewegungsänderung), während das Hubseil sich minimal dehnt (Verformung).</p>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 1 – Textverständnis (Multiple Choice)</div>
+    <div class="mcTask" data-correct="b" data-taskid="t1">
+      <p style="margin:0 0 10px 0;">Welche Aussage zu Kräften ist laut Infotext <u>richtig</u>?</p>
+      <label class="option"><input type="radio" name="t1" value="a"> Man kann eine Kraft direkt mit dem Auge sehen.</label>
+      <label class="option"><input type="radio" name="t1" value="b"> Eine Kraft kann einen Körper verformen oder seinen Bewegungszustand ändern.</label>
+      <label class="option"><input type="radio" name="t1" value="c"> Kräfte wirken nur auf Bälle und Federn.</label>
+      <label class="option"><input type="radio" name="t1" value="d"> Eine Kraft hat immer nur eine einzige Wirkung.</label>
+      <div class="explanation" data-text="Richtig ist b: Eine Kraft verformt Körper oder ändert ihren Bewegungszustand (schneller, langsamer, Richtung, in Bewegung setzen). Man sieht nur die Wirkung, nicht die Kraft selbst – und oft treten mehrere Wirkungen gleichzeitig auf."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t1')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t1"><span class="helpLabel">Hilfe zu Aufgabe 1</span>
+      Gehe die vier Antworten einzeln durch und prüfe sie am Infotext:
+      <ol>
+        <li>Steht im Infotext, dass man eine Kraft <em>sehen</em> kann – oder nur ihre Wirkung?</li>
+        <li>Steht dort, dass eine Kraft einen Körper verformen <em>oder</em> seinen Bewegungszustand ändern kann?</li>
+        <li>Wirken Kräfte laut Text nur auf Bälle und Federn, oder ganz allgemein auf Körper?</li>
+        <li>Kann laut Beispiel (Torwart) eine Kraft auch <em>mehrere</em> Wirkungen gleichzeitig haben?</li>
+      </ol>
+      Nur eine der vier Antworten stimmt bei allen vier Fragen mit dem Infotext überein.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 2 – Situationen zuordnen</div>
+    <p style="margin:0 0 10px 0;font-size:14.5px;">Ordne jeder Situation die passende Wirkung zu.</p>
+    <div class="calcRow">Ein Auto bremst vor einer Ampel ab.
+      <select id="z1" data-answer="bewegung"><option value="">– wählen –</option><option value="verformung">Verformungswirkung</option><option value="bewegung">Bewegungsänderung</option></select>
+    </div>
+    <div class="calcRow">Du drückst deinen Finger in einen Schwamm.
+      <select id="z2" data-answer="verformung"><option value="">– wählen –</option><option value="verformung">Verformungswirkung</option><option value="bewegung">Bewegungsänderung</option></select>
+    </div>
+    <div class="calcRow">Ein Tennisball prallt von der Wand ab und fliegt zurück.
+      <select id="z3" data-answer="bewegung"><option value="">– wählen –</option><option value="verformung">Verformungswirkung</option><option value="bewegung">Bewegungsänderung (Richtungsänderung)</option></select>
+    </div>
+    <button class="checkBtn" onclick="checkZuordnung(['z1','z2','z3'],'t2')">Prüfen</button>
+    <div class="explanation" id="expZ">
+      Auto bremst → Bewegungsänderung (wird langsamer). Finger in Schwamm → Verformung. Tennisball prallt ab → Bewegungsänderung, hier genauer eine Richtungsänderung.
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t2')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t2"><span class="helpLabel">Hilfe zu Aufgabe 2</span>
+      Stelle dir bei jeder Situation zwei Fragen:
+      <ol>
+        <li><strong>Ändert sich die Form</strong> des Gegenstands (er wird gedrückt, gedehnt, verbogen)? → Verformungswirkung.</li>
+        <li><strong>Ändert sich die Bewegung</strong> (schneller, langsamer, Richtung, Start/Stopp)? → Bewegungsänderung.</li>
+      </ol>
+      Beispiel zum Üben: Ein bremsendes Auto wird <em>langsamer</em> – seine Form bleibt gleich. Das ist also eine Bewegungsänderung, keine Verformung.
+      Beim Tennisball, der von der Wand abprallt, ändert sich seine <em>Bewegungsrichtung</em> – auch das zählt als Bewegungsänderung.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge heft">HEFT</span> Aufgabe 3 – Eigene Beispiele finden</div>
+    <div class="heftTask">
+      <input type="checkbox" onchange="heftCheck(this,'t3')">
+      <span>Notiere in deinem Heft <strong>drei eigene Beispiele</strong> aus deinem Alltag, bei denen eine Kraft wirkt.
+      Beschreibe bei jedem Beispiel, <strong>welche Wirkung</strong> du beobachtest (Verformung, Bewegungsänderung oder beides).
+      Hake hier ab, sobald du fertig bist.</span>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t3')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t3"><span class="helpLabel">Hilfe zu Aufgabe 3</span>
+      Wenn dir kein Beispiel einfällt, denke an diese Bereiche:
+      <ul>
+        <li><strong>Sport:</strong> Einen Ball schießen oder fangen, auf ein Trampolin springen.</li>
+        <li><strong>Zu Hause:</strong> Eine Tür öffnen, eine Schublade zuschieben, Zähneputzen mit der Zahnbürste.</li>
+        <li><strong>Unterwegs:</strong> Bremsen mit dem Fahrrad, ein Bus, der anfährt.</li>
+      </ul>
+      Schreibe zu jedem Beispiel einen Satz nach diesem Muster: „Wenn ich ___, dann wirkt eine Kraft, die ___ bewirkt (Verformung und/oder Bewegungsänderung)."
+    </div>
+  </div>
+
+  <div class="navFoot"><button onclick="showSection('start')">← Zurück</button><button onclick="showSection('station2')">Weiter zu Station 2 →</button></div>
+</section>
+
+<!-- ================= STATION 2 ================= -->
+<section class="station" id="station2">
+  <div class="stationHead">
+    <div class="stationNum">2</div>
+    <h2>Kraft messen – der Federkraftmesser<span class="time">ca. 15 Minuten</span></h2>
+  </div>
+
+  <div class="infoBox">
+    <h3>Infotext</h3>
+    <p>Um Kräfte genau zu messen, benutzt man einen <strong>Federkraftmesser</strong>. Er besteht aus einem
+    <strong>Gehäuse</strong> mit Skala, einer <strong>Schraubenfeder</strong> im Inneren, einem <strong>Zeiger</strong>
+    (bzw. der Federmarkierung selbst) und einem <strong>Haken</strong>, an den man die zu messende Last hängt.</p>
+    <p>Hängt man eine Kraft an den Haken, dehnt sich die Feder. Bei einer guten Schraubenfeder gilt: Je größer die
+    wirkende Kraft, desto größer die Dehnung – und zwar <strong>proportional</strong> (doppelte Kraft → doppelte Dehnung).
+    Diesen Zusammenhang nennt man das <strong>Hookesche Gesetz</strong>. Der Zusammenhang zwischen Kraft F und Dehnung x
+    wird durch die <strong>Federkonstante k</strong> beschrieben: <strong>k = F ÷ x</strong>.</p>
+  </div>
+
+  <div class="sketchBox">
+    <div class="sketchLabel">Skizze · Aufbau des Federkraftmessers</div>
+    <svg viewBox="0 0 260 220" width="260" height="220">
+      <rect x="90" y="10" width="80" height="150" rx="10" fill="#EEF3F8" stroke="#1F4E79" stroke-width="2.5"/>
+      <line x1="130" y1="0" x2="130" y2="10" stroke="#1F4E79" stroke-width="2.5"/>
+      <circle cx="130" cy="0" r="5" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+      <polyline points="130,25 118,35 142,45 118,55 142,65 118,75 142,85 130,95"
+        fill="none" stroke="#E8702A" stroke-width="2.5"/>
+      <line x1="145" y1="30" x2="168" y2="30" stroke="#667085" stroke-width="1.3"/>
+      <line x1="145" y1="50" x2="168" y2="50" stroke="#667085" stroke-width="1.3"/>
+      <line x1="145" y1="70" x2="168" y2="70" stroke="#667085" stroke-width="1.3"/>
+      <line x1="145" y1="90" x2="168" y2="90" stroke="#667085" stroke-width="1.3"/>
+      <line x1="130" y1="95" x2="130" y2="115" stroke="#1F4E79" stroke-width="2.5"/>
+      <path d="M120,115 h20 v10 a10,10 0 0 1 -20,0 z" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+      <rect x="112" y="145" width="36" height="24" rx="3" fill="#FFF6EC" stroke="#E8702A" stroke-width="2"/>
+      <text x="130" y="161" text-anchor="middle" font-size="11" fill="#B9560F" font-weight="700">Last</text>
+
+      <text x="205" y="35" font-size="12" fill="#1F4E79" font-weight="700">Gehäuse</text>
+      <line x1="170" y1="30" x2="200" y2="30" stroke="#1F4E79" stroke-width="1"/>
+      <text x="205" y="58" font-size="12" fill="#E8702A" font-weight="700">Feder</text>
+      <line x1="145" y1="55" x2="200" y2="55" stroke="#E8702A" stroke-width="1"/>
+      <text x="205" y="93" font-size="12" fill="#667085" font-weight="700">Skala</text>
+      <line x1="168" y1="90" x2="200" y2="90" stroke="#667085" stroke-width="1"/>
+      <text x="55" y="133" font-size="12" fill="#1F4E79" font-weight="700" text-anchor="end">Haken</text>
+      <line x1="115" y1="125" x2="58" y2="130" stroke="#1F4E79" stroke-width="1"/>
+    </svg>
+    <div class="sketchCaption">So sieht der Federkraftmesser aus deiner Skizzenaufgabe im Prinzip aus.</div>
+  </div>
+
+  <div class="beispielBox">
+    <h3>Beispiel</h3>
+    <p>An eine Feder wird ein Gewichtsstück mit der Masse 200 g gehängt. Die Gewichtskraft beträgt damit
+    F = 0,2 kg · 10 m/s² = 2 N. Die Feder dehnt sich dabei um 4 cm. Die Federkonstante ist also:</p>
+    <p style="text-align:center;font-weight:600;">k = F ÷ x = 2 N ÷ 4 cm = 0,5 N/cm</p>
+    <p>Mit dieser Federkonstante kann man nun berechnen, wie weit sich dieselbe Feder bei einer anderen Kraft dehnt.</p>
+  </div>
+
+  <div class="simBox">
+    <div class="simTitle">🧪 Simulation: Federkraftmesser ausprobieren</div>
+    <div class="simControls">
+      <label>Angehängte Masse: <span id="simFedMassLabel">200 g</span>
+        <input type="range" id="simFedMass" min="0" max="1000" step="50" value="200" oninput="updateFederSim()">
+      </label>
+    </div>
+    <svg viewBox="0 0 260 300" width="260" height="300">
+      <rect x="90" y="10" width="80" height="270" rx="10" fill="#EEF3F8" stroke="#1F4E79" stroke-width="2.5"/>
+      <line x1="130" y1="0" x2="130" y2="10" stroke="#1F4E79" stroke-width="2.5"/>
+      <circle cx="130" cy="0" r="5" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+      <polyline id="simFedCoil" points="" fill="none" stroke="#E8702A" stroke-width="2.5"/>
+      <line id="simFedHookLine" x1="130" y1="25" x2="130" y2="45" stroke="#1F4E79" stroke-width="2.5"/>
+      <path id="simFedHook" d="M120,45 h20 v10 a10,10 0 0 1 -20,0 z" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+      <rect id="simFedWeight" x="112" y="75" width="36" height="24" rx="3" fill="#FFF6EC" stroke="#E8702A" stroke-width="2"/>
+      <text id="simFedWeightText" x="130" y="91" text-anchor="middle" font-size="10" fill="#B9560F" font-weight="700">200 g</text>
+    </svg>
+    <div class="simOutput">
+      Gewichtskraft: <span class="big" id="simFedF">2,0 N</span> &nbsp;·&nbsp;
+      Dehnung: <span class="big" id="simFedX">4,0 cm</span> (bei k = 0,5 N/cm)
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 4 – Bauteile des Federkraftmessers</div>
+    <div class="mcTask" data-correct="c" data-taskid="t4">
+      <p style="margin:0 0 10px 0;">Welches Bauteil eines Federkraftmessers dehnt sich, wenn eine Kraft wirkt?</p>
+      <label class="option"><input type="radio" name="t4" value="a"> Das Gehäuse</label>
+      <label class="option"><input type="radio" name="t4" value="b"> Der Haken</label>
+      <label class="option"><input type="radio" name="t4" value="c"> Die Schraubenfeder</label>
+      <label class="option"><input type="radio" name="t4" value="d"> Die Skala</label>
+      <div class="explanation" data-text="Richtig ist c: Die Schraubenfeder im Inneren dehnt sich, wenn eine Kraft am Haken zieht. Die Dehnung wird über den Zeiger an der Skala im Gehäuse ablesbar gemacht."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t4')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t4"><span class="helpLabel">Hilfe zu Aufgabe 4</span>
+      Gehe die Bauteile im Infotext einzeln durch: Das <strong>Gehäuse</strong> ist die feste Hülle, es verändert sich nicht.
+      Die <strong>Skala</strong> ist nur die aufgedruckte Zahlenreihe. Der <strong>Haken</strong> hängt fest an der Feder und
+      bewegt sich nur mit, weil die Feder ihn zieht. Welches einzelne Bauteil wird länger, wenn eine Kraft zieht?
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 5 – Lückentext</div>
+    <p class="lueckentext">Der Federkraftmesser misst Kräfte in der Einheit
+      <input type="text" class="blank" id="l1" data-answer="newton|n"> .
+      Je größer die wirkende Kraft ist, desto
+      <input type="text" class="blank" id="l2" data-answer="größer|groesser"> ist die Dehnung der Feder.
+      Diesen proportionalen Zusammenhang nennt man das
+      <input type="text" class="blank wide" id="l3" data-answer="hookesche gesetz|hooksche gesetz"> .
+    </p>
+    <button class="checkBtn" onclick="checkLueckentext(['l1','l2','l3'],'t5')">Prüfen</button>
+    <button class="helpBtn" onclick="toggleHelp('help_t5')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t5"><span class="helpLabel">Hilfe zu Aufgabe 5</span>
+      <ol>
+        <li><strong>1. Lücke:</strong> Suche im Infotext den Satz „Kräfte werden in der Einheit … angegeben" (aus Station 1). Es ist die Krafteinheit, abgekürzt mit einem großen Buchstaben.</li>
+        <li><strong>2. Lücke:</strong> Bei einer Feder gilt: mehr Kraft → mehr Dehnung. Setze also ein Wort ein, das „mehr" oder „stärker" bedeutet.</li>
+        <li><strong>3. Lücke:</strong> Der Name des Gesetzes steht direkt im Infotext, in dem Satz, der mit „Diesen Zusammenhang nennt man…" beginnt. Er ist nach einem berühmten Physiker benannt.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 6 – Rechnen mit der Federkonstante</div>
+    <p style="margin:0 0 10px 0;font-size:14.5px;">Die Feder aus dem Beispiel hat die Federkonstante k = 0,5 N/cm.
+    Nun wird eine Masse von 600 g angehängt.</p>
+    <div class="calcRow">Gewichtskraft: F = <input type="text" id="c1" data-answer="6" data-unit="N" placeholder="in N"> N</div>
+    <div class="calcRow">Dehnung der Feder: x = <input type="text" id="c2" data-answer="12" data-unit="cm" placeholder="in cm"> cm</div>
+    <button class="checkBtn" onclick="checkCalc(['c1','c2'],'t6')">Prüfen</button>
+    <div class="explanation" id="expC12">Lösungsweg: F = m · g = 0,6 kg · 10 m/s² = 6 N. Dehnung: x = F ÷ k = 6 N ÷ 0,5 N/cm = 12 cm.</div>
+    <button class="helpBtn" onclick="toggleHelp('help_t6')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t6"><span class="helpLabel">Hilfe zu Aufgabe 6</span>
+      Gehe in drei Schritten vor:
+      <ol>
+        <li><strong>Masse umrechnen:</strong> 600 g = 0,6 kg (durch 1000 teilen).</li>
+        <li><strong>Gewichtskraft berechnen:</strong> F = m · g = 0,6 kg · 10 m/s². Rechne das aus – das Ergebnis ist die erste Lücke (in N).</li>
+        <li><strong>Dehnung berechnen:</strong> Nutze die Federkonstante aus dem Beispiel (k = 0,5 N/cm) und die Formel x = F ÷ k. Teile deine berechnete Kraft durch 0,5 N/cm – das Ergebnis ist die zweite Lücke (in cm).</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge heft">HEFT</span> Aufgabe 7 – Skizze mit Beschriftung</div>
+    <div class="heftTask">
+      <input type="checkbox" onchange="heftCheck(this,'t7')">
+      <span>Zeichne in dein Heft eine <strong>beschriftete Skizze</strong> eines Federkraftmessers.
+      Beschrifte mindestens: Gehäuse, Feder, Zeiger/Skala, Haken. Ergänze außerdem in einem Satz,
+      warum ein Federkraftmesser genau eine Skala mit gleichmäßigen Abständen haben kann.</span>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t7')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t7"><span class="helpLabel">Hilfe zu Aufgabe 7</span>
+      Zeichne zuerst ein langes, schmales Rechteck (das Gehäuse) mit einer Zickzack-Linie darin (die Feder). Male oben eine
+      Öse zum Aufhängen und unten einen Haken. An der Seite des Gehäuses zeichnest du kurze Striche mit Zahlen (die Skala) –
+      dort, wo die Feder endet, ist der Zeiger. Beschrifte mit Pfeilen: Gehäuse, Schraubenfeder, Zeiger/Skala, Haken.
+      Für den Satz: Erinnere dich an das Hookesche Gesetz aus dem Infotext – die Dehnung ist <em>proportional</em> zur Kraft,
+      deshalb sind gleiche Kraftschritte auch gleiche Abschnitte auf der Skala.
+    </div>
+  </div>
+
+  <div class="navFoot"><button onclick="showSection('station1')">← Zurück</button><button onclick="showSection('station3')">Weiter zu Station 3 →</button></div>
+</section>
+
+<!-- ================= STATION 3 ================= -->
+<section class="station" id="station3">
+  <div class="stationHead">
+    <div class="stationNum">3</div>
+    <h2>Masse und Gewichtskraft<span class="time">ca. 18 Minuten</span></h2>
+  </div>
+
+  <div class="infoBox">
+    <h3>Infotext</h3>
+    <p><strong>Masse (m)</strong> ist eine Eigenschaft eines Körpers – sie gibt an, wie viel „Stoff" in ihm steckt.
+    Die Masse ist überall im Universum gleich groß und wird in <strong>Kilogramm (kg)</strong> mit einer
+    <strong>Waage</strong> gemessen.</p>
+    <p><strong>Gewichtskraft (F<sub>G</sub>)</strong> ist die Kraft, mit der ein Körper von einem Himmelskörper
+    angezogen wird. Sie hängt vom Ort ab und wird in <strong>Newton (N)</strong> mit einem
+    <strong>Federkraftmesser</strong> gemessen. Es gilt:</p>
+    <p style="text-align:center;font-weight:600;">F<sub>G</sub> = m · g</p>
+    <p>Dabei ist <strong>g der Ortsfaktor</strong>. Auf der Erde beträgt er etwa g ≈ 9,81 m/s² (für Rechnungen oft
+    gerundet: g ≈ 10 m/s²). Auf anderen Himmelskörpern ist der Ortsfaktor anders:</p>
+    <table class="factTable">
+      <tr><th>Himmelskörper</th><th>Erde</th><th>Mond</th><th>Mars</th><th>Jupiter</th></tr>
+      <tr><td class="label">Ortsfaktor g in m/s²</td><td>9,81</td><td>1,62</td><td>3,71</td><td>24,79</td></tr>
+    </table>
+  </div>
+
+  <div class="beispielBox">
+    <h3>Beispiel</h3>
+    <p>Eine Schultasche hat eine Masse von 4,5 kg. Auf der Erde beträgt die Gewichtskraft:</p>
+    <p style="text-align:center;font-weight:600;">F<sub>G</sub> = m · g = 4,5 kg · 10 m/s² = 45 N</p>
+    <p>Die Masse der Schultasche (4,5 kg) bliebe auf dem Mond exakt gleich – nur die Gewichtskraft würde sich
+    ändern, weil der Ortsfaktor dort viel kleiner ist.</p>
+  </div>
+
+  <div class="simBox">
+    <div class="simTitle">🧪 Simulation: Gleiche Masse, unterschiedliche Himmelskörper</div>
+    <div class="simControls">
+      <label>Masse: <span id="simGravMassLabel">5,0 kg</span>
+        <input type="range" id="simGravMass" min="1" max="20" step="0.5" value="5" oninput="updateGravSim()">
+      </label>
+      <div class="simBtnGroup" id="simGravButtons">
+        <button type="button" class="simBtn active" data-g="9.81" onclick="setGravBody(this)">Erde</button>
+        <button type="button" class="simBtn" data-g="1.62" onclick="setGravBody(this)">Mond</button>
+        <button type="button" class="simBtn" data-g="3.71" onclick="setGravBody(this)">Mars</button>
+        <button type="button" class="simBtn" data-g="24.79" onclick="setGravBody(this)">Jupiter</button>
+      </div>
+    </div>
+    <svg viewBox="0 0 420 70" width="420" height="70">
+      <rect x="10" y="25" width="400" height="20" rx="4" fill="#EEF3F8" stroke="#1F4E79" stroke-width="1.5"/>
+      <rect id="simGravBar" x="10" y="25" width="0" height="20" rx="4" fill="#E8702A"/>
+      <text x="10" y="18" font-size="11" fill="#667085">0 N</text>
+      <text x="405" y="18" font-size="11" fill="#667085" text-anchor="end">≈ 496 N (Maximum)</text>
+    </svg>
+    <div class="simOutput">
+      Ortsfaktor g = <span class="big" id="simGravG">9,81 m/s²</span> &nbsp;·&nbsp;
+      Gewichtskraft F<sub>G</sub> = <span class="big" id="simGravF">49,1 N</span>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 8 – Rechnen mit F<sub>G</sub> = m · g</div>
+    <p style="margin:0 0 10px 0;font-size:14.5px;">Ein Rucksack hat eine Masse von 8 kg. Runde g auf 10 m/s² (Erde)
+    bzw. 1,6 m/s² (Mond).</p>
+    <div class="calcRow">Gewichtskraft auf der Erde: F<sub>G</sub> = <input type="text" id="c3" data-answer="80"> N</div>
+    <div class="calcRow">Gewichtskraft auf dem Mond: F<sub>G</sub> = <input type="text" id="c4" data-answer="12.8|12,8"> N</div>
+    <button class="checkBtn" onclick="checkCalc(['c3','c4'],'t8')">Prüfen</button>
+    <div class="explanation" id="expC34">Erde: F_G = 8 kg · 10 m/s² = 80 N. Mond: F_G = 8 kg · 1,6 m/s² = 12,8 N. Die Masse (8 kg) bleibt in beiden Fällen gleich.</div>
+    <button class="helpBtn" onclick="toggleHelp('help_t8')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t8"><span class="helpLabel">Hilfe zu Aufgabe 8</span>
+      Nutze bei beiden Teilaufgaben dieselbe Formel: F<sub>G</sub> = m · g.
+      <ol>
+        <li><strong>Erde:</strong> F<sub>G</sub> = 8 kg · 10 m/s². Rechne 8 mal 10.</li>
+        <li><strong>Mond:</strong> F<sub>G</sub> = 8 kg · 1,6 m/s². Rechne 8 mal 1,6 (Tipp: 8 · 1,6 = 8 · 1 + 8 · 0,6).</li>
+      </ol>
+      Die Masse (8 kg) ändert sich bei beiden Rechnungen nicht – nur der Ortsfaktor g ist anders.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 9 – Verständnisfrage</div>
+    <div class="mcTask" data-correct="b" data-taskid="t9">
+      <p style="margin:0 0 10px 0;">Eine Astronautin fliegt von der Erde zum Mars. Was passiert mit ihrer Masse und ihrer Gewichtskraft?</p>
+      <label class="option"><input type="radio" name="t9" value="a"> Beide bleiben exakt gleich.</label>
+      <label class="option"><input type="radio" name="t9" value="b"> Die Masse bleibt gleich, die Gewichtskraft wird kleiner.</label>
+      <label class="option"><input type="radio" name="t9" value="c"> Die Masse wird kleiner, die Gewichtskraft bleibt gleich.</label>
+      <label class="option"><input type="radio" name="t9" value="d"> Beide werden größer.</label>
+      <div class="explanation" data-text="Richtig ist b: Die Masse ist eine Eigenschaft des Körpers und bleibt überall gleich. Da der Ortsfaktor auf dem Mars (3,71 m/s²) kleiner ist als auf der Erde (9,81 m/s²), wird die Gewichtskraft kleiner."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t9')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t9"><span class="helpLabel">Hilfe zu Aufgabe 9</span>
+      Stelle dir zwei Fragen:
+      <ol>
+        <li>Ändert sich die <strong>Menge an Materie</strong> (Masse) der Astronautin, nur weil sie an einen anderen Ort fliegt? (Nein – sie bleibt dieselbe Person mit demselben Körper.)</li>
+        <li>Schau in der Tabelle im Infotext nach: Ist der Ortsfaktor auf dem Mars <strong>größer oder kleiner</strong> als auf der Erde?</li>
+      </ol>
+      Da F<sub>G</sub> = m · g gilt und g auf dem Mars kleiner ist, muss auch F<sub>G</sub> kleiner werden – bei gleichbleibender Masse.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge heft">HEFT</span> Aufgabe 10 – Rechnung mit Lösungsweg</div>
+    <div class="heftTask">
+      <input type="checkbox" onchange="heftCheck(this,'t10')">
+      <span>Ein Mondgestein hat auf dem Mond eine Gewichtskraft von <strong>16,2 N</strong> gemessen worden
+      (Ortsfaktor Mond: 1,62 m/s²). Berechne in deinem Heft mit vollständigem Lösungsweg (Formel umstellen!)
+      die <strong>Masse</strong> des Gesteins und anschließend seine <strong>Gewichtskraft auf der Erde</strong>.</span>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t10')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t10"><span class="helpLabel">Hilfe zu Aufgabe 10</span>
+      <ol>
+        <li><strong>Formel umstellen:</strong> Starte mit F<sub>G</sub> = m · g. Um m zu berechnen, teilst du beide Seiten durch g: m = F<sub>G</sub> ÷ g.</li>
+        <li><strong>Werte einsetzen (Mond):</strong> m = 16,2 N ÷ 1,62 m/s². Rechne das aus – das ist die Masse des Gesteins in kg.</li>
+        <li><strong>Gewichtskraft auf der Erde:</strong> Nimm dieselbe Masse (sie ändert sich nicht!) und rechne F<sub>G</sub> = m · g mit g = 10 m/s² (Erde).</li>
+      </ol>
+      Schreibe jeden Rechenschritt einzeln mit Einheiten in dein Heft.
+    </div>
+  </div>
+
+  <div class="navFoot"><button onclick="showSection('station2')">← Zurück</button><button onclick="showSection('station4')">Weiter zu Station 4 →</button></div>
+</section>
+
+<!-- ================= STATION 4 ================= -->
+<section class="station" id="station4">
+  <div class="stationHead">
+    <div class="stationNum">4</div>
+    <h2>Kräfteaddition – Kraft ist eine gerichtete Größe<span class="time">ca. 18 Minuten</span></h2>
+  </div>
+
+  <div class="infoBox">
+    <h3>Infotext</h3>
+    <p>Größen wie Masse oder Temperatur sind durch eine einzige Zahl mit Einheit vollständig beschrieben –
+    man nennt sie <strong>skalare Größen</strong>. Eine Kraft ist dagegen eine <strong>gerichtete Größe (Vektor)</strong>:
+    Sie hat immer</p>
+    <ul>
+      <li>einen <strong>Betrag</strong> (wie stark, in N),</li>
+      <li>eine <strong>Richtung</strong> (wohin),</li>
+      <li>und einen <strong>Angriffspunkt</strong> (wo sie wirkt).</li>
+    </ul>
+    <p>Wirken zwei Kräfte auf derselben Wirkungslinie, kann man sie einfach zusammenfassen:</p>
+    <ul>
+      <li><strong>Gleichgerichtete Kräfte</strong> (zeigen in dieselbe Richtung) werden <strong>addiert</strong>.</li>
+      <li><strong>Entgegengesetzte Kräfte</strong> (zeigen in verschiedene Richtungen) werden <strong>subtrahiert</strong>;
+      die größere Kraft gibt die Richtung der resultierenden Kraft vor.</li>
+    </ul>
+  </div>
+
+  <div class="beispielBox">
+    <h3>Beispiel</h3>
+    <p>Zwei Personen schieben gemeinsam in dieselbe Richtung einen Schrank: Person A mit 150 N, Person B mit 90 N.
+    Die resultierende Kraft ist F = 150 N + 90 N = <strong>240 N</strong> in Schubrichtung.</p>
+    <p>Beim Tauziehen zieht Team A mit 380 N nach links, Team B zieht mit 340 N nach rechts – also entgegengesetzt.
+    Die resultierende Kraft ist F = 380 N − 340 N = <strong>40 N nach links</strong>. Team A gewinnt daher.</p>
+  </div>
+
+  <div class="sketchBox">
+    <div class="sketchLabel">Skizze · Beide Beispiele als Kraftpfeile</div>
+    <div class="sketchRow">
+      <div>
+        <svg viewBox="0 0 260 130" width="260" height="130">
+          <rect x="110" y="45" width="50" height="45" rx="4" fill="#EEF3F8" stroke="#1F4E79" stroke-width="2.5"/>
+          <text x="135" y="72" text-anchor="middle" font-size="11" fill="#1F4E79" font-weight="700">Schrank</text>
+          <line x1="15" y1="55" x2="105" y2="55" stroke="#E8702A" stroke-width="4" marker-end="url(#arrowOrange)"/>
+          <text x="60" y="45" text-anchor="middle" font-size="11.5" fill="#B9560F" font-weight="700">A: 150 N</text>
+          <line x1="15" y1="80" x2="105" y2="80" stroke="#1F4E79" stroke-width="4" marker-end="url(#arrowNavy)"/>
+          <text x="60" y="98" text-anchor="middle" font-size="11.5" fill="#1F4E79" font-weight="700">B: 90 N</text>
+          <line x1="15" y1="112" x2="163" y2="112" stroke="#2E7D32" stroke-width="4" marker-end="url(#arrowGreen)"/>
+          <text x="180" y="116" font-size="11.5" fill="#2E7D32" font-weight="700">= 240 N</text>
+        </svg>
+        <div class="sketchCaption">Gleichgerichtet → Kräfte werden addiert</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 260 130" width="260" height="130">
+          <rect x="110" y="30" width="50" height="35" rx="4" fill="#EEF3F8" stroke="#1F4E79" stroke-width="2.5"/>
+          <text x="135" y="52" text-anchor="middle" font-size="10.5" fill="#1F4E79" font-weight="700">Seil</text>
+          <line x1="105" y1="47" x2="15" y2="47" stroke="#E8702A" stroke-width="4" marker-end="url(#arrowOrange)"/>
+          <text x="60" y="38" text-anchor="middle" font-size="11.5" fill="#B9560F" font-weight="700">A: 380 N</text>
+          <line x1="165" y1="47" x2="245" y2="47" stroke="#1F4E79" stroke-width="4" marker-end="url(#arrowNavy)"/>
+          <text x="205" y="38" text-anchor="middle" font-size="11.5" fill="#1F4E79" font-weight="700">B: 340 N</text>
+          <line x1="80" y1="100" x2="15" y2="100" stroke="#2E7D32" stroke-width="4" marker-end="url(#arrowGreen)"/>
+          <text x="47" y="118" text-anchor="middle" font-size="11.5" fill="#2E7D32" font-weight="700">= 40 N (nach links)</text>
+        </svg>
+        <div class="sketchCaption">Entgegengesetzt → Kräfte werden subtrahiert</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="simBox">
+    <div class="simTitle">🧪 Simulation: Kräfte selbst zusammensetzen</div>
+    <div class="simControls">
+      <label>Kraft F₁ (orange): <span id="simAddF1Label">150 N</span>
+        <input type="range" id="simAddF1" min="0" max="400" step="10" value="150" oninput="updateAddSim()">
+      </label>
+      <label>Kraft F₂ (blau): <span id="simAddF2Label">90 N</span>
+        <input type="range" id="simAddF2" min="0" max="400" step="10" value="90" oninput="updateAddSim()">
+      </label>
+      <div class="simBtnGroup" id="simAddDirButtons">
+        <button type="button" class="simBtn active" data-dir="gleich" onclick="setAddDir(this)">Gleichgerichtet</button>
+        <button type="button" class="simBtn" data-dir="gegen" onclick="setAddDir(this)">Entgegengesetzt</button>
+      </div>
+    </div>
+    <svg viewBox="0 0 420 130" width="420" height="130">
+      <line x1="20" y1="65" x2="400" y2="65" stroke="#D9E2EC" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <line id="simAddArrow1" x1="210" y1="35" x2="210" y2="35" stroke="#E8702A" stroke-width="4.5" marker-end="url(#arrowOrange)"/>
+      <line id="simAddArrow2" x1="210" y1="65" x2="210" y2="65" stroke="#1F4E79" stroke-width="4.5" marker-end="url(#arrowNavy)"/>
+      <line id="simAddResult" x1="210" y1="105" x2="210" y2="105" stroke="#2E7D32" stroke-width="5" marker-end="url(#arrowGreen)"/>
+      <text id="simAddResultText" x="210" y="125" text-anchor="middle" font-size="12.5" fill="#2E7D32" font-weight="700"></text>
+    </svg>
+    <div class="simOutput">
+      Resultierende Kraft: <span class="big" id="simAddOutput">240 N nach rechts</span>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 11 – Resultierende Kraft berechnen</div>
+    <p style="margin:0 0 10px 0;font-size:14.5px;">Zwei Kräne ziehen an einem Container: Kran 1 zieht mit 620 N nach oben,
+    Kran 2 zieht mit 480 N ebenfalls nach oben (gleichgerichtet).</p>
+    <div class="calcRow">Resultierende Kraft: F = <input type="text" id="c5" data-answer="1100"> N</div>
+    <button class="checkBtn" onclick="checkCalc(['c5'],'t11')">Prüfen</button>
+    <div class="explanation" id="expC5">Gleichgerichtete Kräfte werden addiert: F = 620 N + 480 N = 1100 N nach oben.</div>
+    <button class="helpBtn" onclick="toggleHelp('help_t11')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t11"><span class="helpLabel">Hilfe zu Aufgabe 11</span>
+      Prüfe zuerst: Ziehen beide Kräne in <strong>dieselbe</strong> Richtung (nach oben) oder in entgegengesetzte Richtungen?
+      Da beide nach oben ziehen, sind es <strong>gleichgerichtete Kräfte</strong> – laut Infotext werden diese
+      <strong>addiert</strong>: F = F<sub>1</sub> + F<sub>2</sub> = 620 N + 480 N. Rechne die Summe aus.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 12 – Skalar oder Vektor?</div>
+    <div class="mcTask" data-correct="d" data-taskid="t12">
+      <p style="margin:0 0 10px 0;">Welche der folgenden physikalischen Größen ist eine <u>gerichtete</u> Größe (Vektor)?</p>
+      <label class="option"><input type="radio" name="t12" value="a"> Die Masse eines Steins</label>
+      <label class="option"><input type="radio" name="t12" value="b"> Die Temperatur eines Raumes</label>
+      <label class="option"><input type="radio" name="t12" value="c"> Die Zeit, die ein Rennen dauert</label>
+      <label class="option"><input type="radio" name="t12" value="d"> Die Kraft, mit der jemand an einem Seil zieht</label>
+      <div class="explanation" data-text="Richtig ist d: Eine Kraft hat Betrag, Richtung und Angriffspunkt – deshalb ist sie eine gerichtete Größe (Vektor). Masse, Temperatur und Zeit sind dagegen skalare Größen: Sie sind durch eine einzige Zahl mit Einheit vollständig beschrieben."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t12')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t12"><span class="helpLabel">Hilfe zu Aufgabe 12</span>
+      Frage bei jeder Antwort: „Reicht eine einzige Zahl mit Einheit aus, um diese Größe vollständig zu beschreiben,
+      oder brauche ich zusätzlich eine <strong>Richtung</strong>?" Die Masse eines Steins (z. B. 3 kg), eine Temperatur
+      (z. B. 20 °C) und eine Zeitdauer (z. B. 12 Sekunden) sind jeweils mit einer Zahl vollständig beschrieben.
+      Bei welcher Antwort musst du zusätzlich sagen, <em>in welche Richtung</em> etwas wirkt?
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge heft">HEFT</span> Aufgabe 13 – Kraftpfeile skizzieren</div>
+    <div class="heftTask">
+      <input type="checkbox" onchange="heftCheck(this,'t13')">
+      <span>Skizziere in deinem Heft die Situation aus Aufgabe 11 (zwei Kräne, die an einem Container ziehen)
+      mit <strong>Kraftpfeilen</strong>. Achte auf eine passende Pfeillänge (je größer die Kraft, desto länger der Pfeil)
+      und beschrifte jeden Pfeil mit seinem Betrag. Zeichne zusätzlich den Pfeil der resultierenden Kraft.</span>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t13')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t13"><span class="helpLabel">Hilfe zu Aufgabe 13</span>
+      Zeichne eine waagerechte Linie als „Container" und von dort zwei Pfeile nach oben (für Kran 1 und Kran 2), beide
+      in dieselbe Richtung. Der Pfeil für 620 N sollte etwas länger sein als der für 480 N – die Längen müssen nicht exakt
+      im Maßstab sein, aber die Reihenfolge muss stimmen. Beschrifte jeden Pfeil mit „620 N" bzw. „480 N". Zeichne
+      daneben einen dritten, noch längeren Pfeil für die resultierende Kraft (aus Aufgabe 11) und beschrifte ihn mit deinem
+      berechneten Ergebnis.
+    </div>
+  </div>
+
+  <div class="navFoot"><button onclick="showSection('station3')">← Zurück</button><button onclick="showSection('station5')">Weiter zu Station 5 →</button></div>
+</section>
+
+<!-- ================= STATION 5 ================= -->
+<section class="station" id="station5">
+  <div class="stationHead">
+    <div class="stationNum">5</div>
+    <h2>Das Wechselwirkungsprinzip – Kraft und Gegenkraft<span class="time">ca. 12 Minuten</span></h2>
+  </div>
+
+  <div class="infoBox">
+    <h3>Infotext (neuer Inhalt)</h3>
+    <p>Übt ein Körper A eine Kraft auf einen Körper B aus, so übt B <strong>gleichzeitig</strong> eine
+    <strong>gleich große</strong>, aber <strong>entgegengesetzt gerichtete</strong> Kraft auf A aus. Man nennt
+    dies das <strong>Wechselwirkungsprinzip</strong> (kurz: „Kraft = Gegenkraft" oder <em>actio = reactio</em>).</p>
+    <p>Wichtig: Kraft und Gegenkraft wirken auf <strong>zwei verschiedene Körper</strong> – deshalb heben sie
+    sich <strong>nicht gegenseitig auf</strong>, obwohl sie gleich groß und entgegengesetzt sind.</p>
+  </div>
+
+  <div class="beispielBox">
+    <h3>Beispiel</h3>
+    <p>Eine Schwimmerin stößt sich am Beckenrand ab: Sie drückt mit den Füßen gegen die Wand (Kraft), und die Wand
+    drückt gleich stark zurück gegen ihre Füße (Gegenkraft) – dadurch schwimmt sie los. Ein weiteres Beispiel:
+    Wenn du auf dem Boden stehst, drückt dein Körper mit seiner Gewichtskraft nach unten auf den Boden, und der
+    Boden drückt mit einer gleich großen Kraft nach oben zurück – deshalb sinkst du nicht ein.</p>
+  </div>
+
+  <div class="sketchBox">
+    <div class="sketchLabel">Skizze · Kraft und Gegenkraft (gleich lang, entgegengesetzt)</div>
+    <svg viewBox="0 0 340 120" width="340" height="120">
+      <rect x="20" y="35" width="60" height="50" rx="6" fill="#FFF6EC" stroke="#E8702A" stroke-width="2.5"/>
+      <text x="50" y="65" text-anchor="middle" font-size="12" fill="#B9560F" font-weight="700">Körper A</text>
+      <rect x="260" y="35" width="60" height="50" rx="6" fill="#EEF3F8" stroke="#1F4E79" stroke-width="2.5"/>
+      <text x="290" y="65" text-anchor="middle" font-size="12" fill="#1F4E79" font-weight="700">Körper B</text>
+      <line x1="85" y1="50" x2="255" y2="50" stroke="#E8702A" stroke-width="4" marker-end="url(#arrowOrange)"/>
+      <text x="170" y="42" text-anchor="middle" font-size="12" fill="#B9560F" font-weight="700">Kraft</text>
+      <line x1="255" y1="72" x2="85" y2="72" stroke="#1F4E79" stroke-width="4" marker-end="url(#arrowNavy)"/>
+      <text x="170" y="97" text-anchor="middle" font-size="12" fill="#1F4E79" font-weight="700">Gegenkraft</text>
+    </svg>
+    <div class="sketchCaption">Beide Pfeile sind gleich lang (gleich groß), zeigen aber in entgegengesetzte Richtungen – auf zwei verschiedene Körper.</div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 14 – Kraft-Gegenkraft-Paar erkennen</div>
+    <div class="mcTask" data-correct="c" data-taskid="t14">
+      <p style="margin:0 0 10px 0;">Ein Junge springt von einem Boot ans Ufer. Welche Aussage beschreibt das
+      Wechselwirkungsprinzip in dieser Situation richtig?</p>
+      <label class="option"><input type="radio" name="t14" value="a"> Nur der Junge übt eine Kraft aus, das Boot bleibt kräftefrei.</label>
+      <label class="option"><input type="radio" name="t14" value="b"> Die Kraft des Jungen auf das Boot ist größer als die Kraft des Bootes auf den Jungen.</label>
+      <label class="option"><input type="radio" name="t14" value="c"> Der Junge stößt sich mit einer Kraft vom Boot ab, das Boot stößt mit gleich großer Gegenkraft in die andere Richtung.</label>
+      <label class="option"><input type="radio" name="t14" value="d"> Die beiden Kräfte heben sich gegenseitig auf, deshalb bewegt sich nichts.</label>
+      <div class="explanation" data-text="Richtig ist c: Der Junge übt eine Kraft auf das Boot aus (nach hinten), das Boot übt eine gleich große Gegenkraft auf den Jungen aus (nach vorne, Richtung Ufer). Die Kräfte heben sich nicht auf, weil sie auf verschiedene Körper wirken – deshalb bewegen sich beide: der Junge nach vorne, das Boot nach hinten."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t14')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t14"><span class="helpLabel">Hilfe zu Aufgabe 14</span>
+      Nutze die Kernregel aus dem Infotext: Kraft und Gegenkraft sind <strong>gleich groß</strong>, wirken aber auf
+      <strong>zwei verschiedene Körper</strong> und heben sich deshalb <strong>nicht</strong> auf. Prüfe jede Antwort:
+      Behauptet sie, dass nur einer der beiden eine Kraft ausübt? Behauptet sie, dass eine der beiden Kräfte größer ist?
+      Behauptet sie, dass sich die Kräfte gegenseitig aufheben? Nur eine Antwort passt zu allen drei Regeln gleichzeitig.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge">TABLET</span> Aufgabe 15 – Richtig oder falsch?</div>
+    <div class="calcRow">Kraft und Gegenkraft sind immer gleich groß.
+      <select id="rf1" data-answer="richtig"><option value="">– wählen –</option><option value="richtig">Richtig</option><option value="falsch">Falsch</option></select>
+    </div>
+    <div class="calcRow">Kraft und Gegenkraft wirken auf denselben Körper und heben sich deshalb auf.
+      <select id="rf2" data-answer="falsch"><option value="">– wählen –</option><option value="richtig">Richtig</option><option value="falsch">Falsch</option></select>
+    </div>
+    <div class="calcRow">Wenn du gegen eine Wand drückst, drückt die Wand mit gleicher Kraft zurück.
+      <select id="rf3" data-answer="richtig"><option value="">– wählen –</option><option value="richtig">Richtig</option><option value="falsch">Falsch</option></select>
+    </div>
+    <button class="checkBtn" onclick="checkZuordnung(['rf1','rf2','rf3'],'t15')">Prüfen</button>
+    <div class="explanation" id="expRF">
+      1) Richtig – das ist gerade der Kern des Wechselwirkungsprinzips. 2) Falsch – Kraft und Gegenkraft wirken
+      auf zwei verschiedene Körper, deshalb heben sie sich nicht auf. 3) Richtig – die Wand übt eine Gegenkraft
+      auf deine Hand aus.
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t15')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t15"><span class="helpLabel">Hilfe zu Aufgabe 15</span>
+      Lies bei jeder Aussage genau, ob sie von „gleich groß" oder von „demselben Körper" spricht:
+      <ol>
+        <li>„Kraft und Gegenkraft sind immer gleich groß" – das steht wortwörtlich so im Infotext.</li>
+        <li>„…wirken auf denselben Körper" – im Infotext steht aber, dass sie auf <strong>zwei verschiedene</strong> Körper wirken.</li>
+        <li>Denke an das Wand-Beispiel aus dem Infotext: Was passiert, wenn du drückst?</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="taskTitle"><span class="taskBadge heft">HEFT</span> Aufgabe 16 – Eigenes Beispiel</div>
+    <div class="heftTask">
+      <input type="checkbox" onchange="heftCheck(this,'t16')">
+      <span>Beschreibe in deinem Heft ein <strong>eigenes Beispiel</strong> für das Wechselwirkungsprinzip
+      aus deinem Alltag (z. B. Sport, Fahrrad fahren, Springen). Benenne dabei genau, welcher Körper welche Kraft
+      auf welchen anderen Körper ausübt, und erkläre, warum sich die Kräfte nicht gegenseitig aufheben.</span>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_t16')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_t16"><span class="helpLabel">Hilfe zu Aufgabe 16</span>
+      Wähle eine Situation, in der du dich von etwas abstößt oder gegen etwas drückst, z. B.: Losfahren mit dem
+      Fahrrad (du drückst die Pedale nach unten/hinten, das Rad drückt dich nach vorne), Springen vom Boden
+      (du drückst nach unten, der Boden drückt dich nach oben), oder ein Schwimmer, der sich vom Beckenrand abstößt.
+      Schreibe die Antwort in dieser Struktur:
+      <ol>
+        <li>„<em>Körper A</em> übt die Kraft ___ auf <em>Körper B</em> aus."</li>
+        <li>„Gleichzeitig übt <em>Körper B</em> die Gegenkraft ___ auf <em>Körper A</em> aus."</li>
+        <li>„Die Kräfte heben sich nicht auf, weil sie auf zwei verschiedene Körper wirken (nämlich ___ und ___)."</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="navFoot"><button onclick="showSection('station4')">← Zurück</button><button onclick="showSection('abschluss')">Weiter zum Abschlusscheck →</button></div>
+</section>
+
+<!-- ================= ABSCHLUSSCHECK ================= -->
+<section class="station" id="abschluss">
+  <div class="stationHead">
+    <div class="stationNum">✓</div>
+    <h2>Abschlusscheck<span class="time">ca. 10 Minuten · 8 Fragen zu allen Themen</span></h2>
+  </div>
+  <p style="font-size:14.5px;color:var(--grey);">Klicke eine Antwort an – Lösung und Erklärung erscheinen sofort.</p>
+  <div id="scoreBar">Beantwortet: 0 / 8</div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="b" data-taskid="a1">
+      <div class="taskTitle">1. Was ist keine typische Wirkung einer Kraft?</div>
+      <label class="option"><input type="radio" name="a1" value="a"> Verformung</label>
+      <label class="option"><input type="radio" name="a1" value="b"> Farbänderung</label>
+      <label class="option"><input type="radio" name="a1" value="c"> Bewegungsänderung</label>
+      <label class="option"><input type="radio" name="a1" value="d"> Richtungsänderung</label>
+      <div class="explanation" data-text="Eine Farbänderung wird nicht durch eine Kraft, sondern z. B. durch chemische Prozesse verursacht. Typische Kraftwirkungen sind Verformung, Bewegungs- und Richtungsänderung."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a1')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a1"><span class="helpLabel">Hilfe</span>
+      Denke an die drei Wirkungen aus Station 1: Verformung, Bewegungsänderung, Richtungsänderung. Welche der vier
+      Antworten gehört <strong>nicht</strong> zu diesen drei?
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="c" data-taskid="a2">
+      <div class="taskTitle">2. Womit misst man eine Kraft?</div>
+      <label class="option"><input type="radio" name="a2" value="a"> Mit der Waage</label>
+      <label class="option"><input type="radio" name="a2" value="b"> Mit dem Thermometer</label>
+      <label class="option"><input type="radio" name="a2" value="c"> Mit dem Federkraftmesser</label>
+      <label class="option"><input type="radio" name="a2" value="d"> Mit dem Geodreieck</label>
+      <div class="explanation" data-text="Der Federkraftmesser misst Kräfte in Newton, indem eine Feder sich proportional zur wirkenden Kraft dehnt."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a2')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a2"><span class="helpLabel">Hilfe</span>
+      Erinnere dich an Station 2: Welches Messgerät hat eine Feder im Inneren, die sich bei Kraft dehnt?
+      Die Waage misst Masse, das Thermometer Temperatur, das Geodreieck Winkel/Längen.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="a" data-taskid="a3">
+      <div class="taskTitle">3. Eine Feder hat die Federkonstante k = 2 N/cm. Wie weit dehnt sie sich bei einer Kraft von 8 N?</div>
+      <label class="option"><input type="radio" name="a3" value="a"> 4 cm</label>
+      <label class="option"><input type="radio" name="a3" value="b"> 16 cm</label>
+      <label class="option"><input type="radio" name="a3" value="c"> 6 cm</label>
+      <label class="option"><input type="radio" name="a3" value="d"> 10 cm</label>
+      <div class="explanation" data-text="x = F ÷ k = 8 N ÷ 2 N/cm = 4 cm."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a3')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a3"><span class="helpLabel">Hilfe</span>
+      Nutze die Formel aus Station 2: k = F ÷ x, umgestellt nach x: x = F ÷ k. Setze ein: x = 8 N ÷ 2 N/cm. Rechne die Division aus.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="b" data-taskid="a4">
+      <div class="taskTitle">4. Welche Einheit hat die Masse?</div>
+      <label class="option"><input type="radio" name="a4" value="a"> Newton (N)</label>
+      <label class="option"><input type="radio" name="a4" value="b"> Kilogramm (kg)</label>
+      <label class="option"><input type="radio" name="a4" value="c"> m/s²</label>
+      <label class="option"><input type="radio" name="a4" value="d"> N/cm</label>
+      <div class="explanation" data-text="Masse wird in Kilogramm (kg) angegeben – Gewichtskraft dagegen in Newton (N)."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a4')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a4"><span class="helpLabel">Hilfe</span>
+      Überlege: Mit welchem Gerät misst man Masse (aus Station 3)? Mit einer Waage. Welche Einheit zeigt eine Waage an?
+      Newton ist die Einheit der Kraft, m/s² die Einheit des Ortsfaktors, N/cm die Einheit der Federkonstante.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="c" data-taskid="a5">
+      <div class="taskTitle">5. Ein Stein hat eine Masse von 3 kg. Wie groß ist seine Gewichtskraft auf der Erde (g ≈ 10 m/s²)?</div>
+      <label class="option"><input type="radio" name="a5" value="a"> 0,3 N</label>
+      <label class="option"><input type="radio" name="a5" value="b"> 3 N</label>
+      <label class="option"><input type="radio" name="a5" value="c"> 30 N</label>
+      <label class="option"><input type="radio" name="a5" value="d"> 300 N</label>
+      <div class="explanation" data-text="F_G = m · g = 3 kg · 10 m/s² = 30 N."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a5')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a5"><span class="helpLabel">Hilfe</span>
+      Nutze die Formel aus Station 3: F<sub>G</sub> = m · g. Setze ein: F<sub>G</sub> = 3 kg · 10 m/s². Rechne die Multiplikation aus.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="d" data-taskid="a6">
+      <div class="taskTitle">6. Zwei Kräfte von 25 N und 15 N wirken auf einer Wirkungslinie, aber in entgegengesetzte Richtungen. Wie groß ist die resultierende Kraft?</div>
+      <label class="option"><input type="radio" name="a6" value="a"> 40 N</label>
+      <label class="option"><input type="radio" name="a6" value="b"> 0 N</label>
+      <label class="option"><input type="radio" name="a6" value="c"> 375 N</label>
+      <label class="option"><input type="radio" name="a6" value="d"> 10 N</label>
+      <div class="explanation" data-text="Bei entgegengesetzten Kräften wird subtrahiert: 25 N − 15 N = 10 N, in Richtung der größeren Kraft."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a6')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a6"><span class="helpLabel">Hilfe</span>
+      Die Kräfte wirken „entgegengesetzt" – das bedeutet, sie zeigen in verschiedene Richtungen. Laut Station 4 werden
+      solche Kräfte <strong>subtrahiert</strong>, nicht addiert: F = größere Kraft − kleinere Kraft = 25 N − 15 N.
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="b" data-taskid="a7">
+      <div class="taskTitle">7. Warum ist eine Kraft eine „gerichtete Größe"?</div>
+      <label class="option"><input type="radio" name="a7" value="a"> Weil sie nur in Newton gemessen wird.</label>
+      <label class="option"><input type="radio" name="a7" value="b"> Weil sie neben ihrem Betrag auch eine Richtung und einen Angriffspunkt hat.</label>
+      <label class="option"><input type="radio" name="a7" value="c"> Weil sie sich mit einer Waage messen lässt.</label>
+      <label class="option"><input type="radio" name="a7" value="d"> Weil sie überall im Universum gleich groß ist.</label>
+      <div class="explanation" data-text="Eine Kraft ist durch Betrag, Richtung und Angriffspunkt vollständig beschrieben – deshalb ist sie eine vektorielle (gerichtete) Größe."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a7')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a7"><span class="helpLabel">Hilfe</span>
+      Erinnere dich an die drei Merkmale aus Station 4, die eine Kraft vollständig beschreiben: Betrag, Richtung und
+      Angriffspunkt. Welche Antwort nennt genau diese Merkmale?
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="mcTask" data-correct="c" data-taskid="a8">
+      <div class="taskTitle">8. Ein Vogel sitzt auf einem Ast. Nach dem Wechselwirkungsprinzip gilt:</div>
+      <label class="option"><input type="radio" name="a8" value="a"> Nur der Ast übt eine Kraft auf den Vogel aus.</label>
+      <label class="option"><input type="radio" name="a8" value="b"> Nur der Vogel übt eine Kraft auf den Ast aus.</label>
+      <label class="option"><input type="radio" name="a8" value="c"> Der Vogel drückt mit seiner Gewichtskraft auf den Ast, der Ast drückt mit gleich großer Gegenkraft zurück auf den Vogel.</label>
+      <label class="option"><input type="radio" name="a8" value="d"> Die Kräfte heben sich gegenseitig auf, weil sie am selben Körper angreifen.</label>
+      <div class="explanation" data-text="Kraft und Gegenkraft wirken hier auf zwei verschiedene Körper (Vogel und Ast) und heben sich deshalb nicht auf – der Ast biegt sich sogar leicht durch diese Gegenkraft-Wirkung."></div>
+    </div>
+    <button class="helpBtn" onclick="toggleHelp('help_a8')">💡 Hilfekarte anzeigen</button>
+    <div class="helpCard" id="help_a8"><span class="helpLabel">Hilfe</span>
+      Wende das Wechselwirkungsprinzip aus Station 5 an: Zwei <strong>verschiedene</strong> Körper (hier: Vogel und Ast)
+      üben jeweils eine gleich große, aber entgegengesetzte Kraft aufeinander aus. Welche Antwort nennt beide Kräfte
+      und beide Körper richtig, ohne zu behaupten, dass sie sich aufheben?
+    </div>
+  </div>
+
+  <span class="reset-link" id="resetLink">Abschlusscheck zurücksetzen</span>
+
+  <div class="navFoot"><button onclick="showSection('station5')">← Zurück</button><span></span></div>
+</section>
+
+</main>
+
+<script>
+  // ---------- Fortschritt ----------
+  var TOTAL_TASKS = 24;
+  var doneSet = new Set();
+
+  function updateProgress(){
+    document.getElementById('progressText').textContent = doneSet.size + ' / ' + TOTAL_TASKS;
+    document.getElementById('progressInner').style.width = Math.round(doneSet.size / TOTAL_TASKS * 100) + '%';
+    updateLaufzettelRow('lzRow1', ['t1','t2','t3']);
+    updateLaufzettelRow('lzRow2', ['t4','t5','t6','t7']);
+    updateLaufzettelRow('lzRow3', ['t8','t9','t10']);
+    updateLaufzettelRow('lzRow4', ['t11','t12','t13']);
+    updateLaufzettelRow('lzRow5', ['t14','t15','t16']);
+    updateLaufzettelRow('lzRow6', ['a1','a2','a3','a4','a5','a6','a7','a8']);
+    updateNavTicks();
+  }
+
+  function updateLaufzettelRow(rowId, taskIds){
+    var cell = document.getElementById(rowId);
+    if(!cell) return;
+    var allDone = taskIds.every(function(id){ return doneSet.has(id); });
+    if(allDone){ cell.textContent = '✓'; cell.classList.add('ok'); }
+    else { cell.textContent = doneSet.size ? taskIds.filter(function(id){return doneSet.has(id);}).length + '/' + taskIds.length : '–'; cell.classList.remove('ok'); }
+  }
+
+  function updateNavTicks(){
+    var groups = {
+      station1: ['t1','t2','t3'], station2: ['t4','t5','t6','t7'],
+      station3: ['t8','t9','t10'], station4: ['t11','t12','t13'],
+      station5: ['t14','t15','t16'], abschluss: ['a1','a2','a3','a4','a5','a6','a7','a8']
+    };
+    document.querySelectorAll('#mainNav button').forEach(function(btn){
+      var key = btn.getAttribute('data-target');
+      var base = btn.textContent.replace(' ✓','');
+      if(groups[key] && groups[key].every(function(id){return doneSet.has(id);})){
+        btn.textContent = base + ' ✓';
+      } else {
+        btn.textContent = base;
+      }
+    });
+  }
+
+  function markDone(taskId){
+    doneSet.add(taskId);
+    updateProgress();
+  }
+
+  // ---------- Navigation ----------
+  function showSection(id){
+    document.querySelectorAll('section.station').forEach(function(s){ s.classList.remove('visible'); });
+    document.getElementById(id).classList.add('visible');
+    document.querySelectorAll('#mainNav button').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-target') === id);
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.querySelectorAll('#mainNav button').forEach(function(btn){
+    btn.addEventListener('click', function(){ showSection(btn.getAttribute('data-target')); });
+  });
+
+  // ---------- Hilfekarten ----------
+  function toggleHelp(id){
+    var card = document.getElementById(id);
+    var btn = document.querySelector('button[onclick="toggleHelp(\'' + id + '\')"]');
+    var show = !card.classList.contains('show');
+    card.classList.toggle('show', show);
+    if(btn){ btn.innerHTML = show ? '🔽 Hilfekarte ausblenden' : '💡 Hilfekarte anzeigen'; }
+  }
+
+  // ---------- Simulation Station 2: Federkraftmesser ----------
+  function fmtDe(n, digits){
+    return n.toLocaleString('de-DE', {minimumFractionDigits:digits, maximumFractionDigits:digits});
+  }
+  function updateFederSim(){
+    var massG = parseFloat(document.getElementById('simFedMass').value);
+    document.getElementById('simFedMassLabel').textContent = massG.toFixed(0) + ' g';
+    var massKg = massG / 1000;
+    var F = massKg * 10;
+    var k = 0.5;
+    var x = F / k;
+    document.getElementById('simFedF').textContent = fmtDe(F, 1) + ' N';
+    document.getElementById('simFedX').textContent = fmtDe(x, 1) + ' cm';
+    document.getElementById('simFedWeightText').textContent = massG.toFixed(0) + ' g';
+
+    var extra = Math.min(x * 5, 150);
+    var topY = 25, baseLen = 70;
+    var bottomY = topY + baseLen + extra;
+    var segs = 7, pts = ['130,' + topY];
+    for(var i = 1; i < segs; i++){
+      var yy = topY + (bottomY - topY) * i / segs;
+      var xx = (i % 2 === 1) ? 118 : 142;
+      pts.push(xx + ',' + yy.toFixed(1));
+    }
+    pts.push('130,' + bottomY);
+    document.getElementById('simFedCoil').setAttribute('points', pts.join(' '));
+    document.getElementById('simFedHookLine').setAttribute('y1', bottomY);
+    document.getElementById('simFedHookLine').setAttribute('y2', bottomY + 20);
+    var hookY = bottomY + 20;
+    document.getElementById('simFedHook').setAttribute('d', 'M120,' + hookY + ' h20 v10 a10,10 0 0 1 -20,0 z');
+    var weightY = hookY + 30;
+    document.getElementById('simFedWeight').setAttribute('y', weightY);
+    document.getElementById('simFedWeightText').setAttribute('y', weightY + 16);
+  }
+
+  // ---------- Simulation Station 3: Ortsfaktor-Vergleich ----------
+  var gravBodyG = 9.81;
+  var GRAV_MAX = 20 * 24.79;
+  function setGravBody(btn){
+    document.querySelectorAll('#simGravButtons .simBtn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    gravBodyG = parseFloat(btn.getAttribute('data-g'));
+    updateGravSim();
+  }
+  function updateGravSim(){
+    var mass = parseFloat(document.getElementById('simGravMass').value);
+    document.getElementById('simGravMassLabel').textContent = fmtDe(mass, 1) + ' kg';
+    var F = mass * gravBodyG;
+    document.getElementById('simGravG').textContent = fmtDe(gravBodyG, 2) + ' m/s²';
+    document.getElementById('simGravF').textContent = fmtDe(F, 1) + ' N';
+    var widthPx = Math.min(F / GRAV_MAX * 400, 400);
+    document.getElementById('simGravBar').setAttribute('width', widthPx);
+  }
+
+  // ---------- Simulation Station 4: Kräfteaddition ----------
+  var addDir = 'gleich';
+  function setAddDir(btn){
+    document.querySelectorAll('#simAddDirButtons .simBtn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    addDir = btn.getAttribute('data-dir');
+    updateAddSim();
+  }
+  function updateAddSim(){
+    var f1 = parseFloat(document.getElementById('simAddF1').value);
+    var f2 = parseFloat(document.getElementById('simAddF2').value);
+    document.getElementById('simAddF1Label').textContent = f1.toFixed(0) + ' N';
+    document.getElementById('simAddF2Label').textContent = f2.toFixed(0) + ' N';
+
+    var cx = 210, y1 = 35, y2 = 65, yr = 105;
+    var scale = 0.45; // px per Newton, max 400N*0.45=180px
+    var len1 = f1 * scale, len2 = f2 * scale;
+
+    // F1 always points right (orange)
+    document.getElementById('simAddArrow1').setAttribute('x1', cx);
+    document.getElementById('simAddArrow1').setAttribute('x2', cx + len1);
+    document.getElementById('simAddArrow1').setAttribute('y1', y1);
+    document.getElementById('simAddArrow1').setAttribute('y2', y1);
+
+    var result, resultText, resultX2;
+    if(addDir === 'gleich'){
+      // F2 also points right (navy)
+      document.getElementById('simAddArrow2').setAttribute('x1', cx);
+      document.getElementById('simAddArrow2').setAttribute('x2', cx + len2);
+      document.getElementById('simAddArrow2').setAttribute('y1', y2);
+      document.getElementById('simAddArrow2').setAttribute('y2', y2);
+      result = f1 + f2;
+      resultX2 = cx + result * scale;
+      resultText = fmtDe(result, 0) + ' N nach rechts';
+    } else {
+      // F2 points left (navy), starting from cx
+      document.getElementById('simAddArrow2').setAttribute('x1', cx);
+      document.getElementById('simAddArrow2').setAttribute('x2', cx - len2);
+      document.getElementById('simAddArrow2').setAttribute('y1', y2);
+      document.getElementById('simAddArrow2').setAttribute('y2', y2);
+      result = f1 - f2;
+      resultX2 = cx + result * scale;
+      if(Math.abs(result) < 0.5){
+        resultText = '0 N – die Kräfte gleichen sich aus';
+      } else {
+        resultText = fmtDe(Math.abs(result), 0) + ' N nach ' + (result > 0 ? 'rechts' : 'links');
+      }
+    }
+    document.getElementById('simAddResult').setAttribute('x1', cx);
+    document.getElementById('simAddResult').setAttribute('x2', resultX2);
+    document.getElementById('simAddResult').setAttribute('y1', yr);
+    document.getElementById('simAddResult').setAttribute('y2', yr);
+    document.getElementById('simAddResultText').setAttribute('x', (cx + resultX2) / 2);
+    document.getElementById('simAddResultText').textContent = 'Resultierende: ' + resultText;
+    document.getElementById('simAddOutput').textContent = resultText;
+  }
+
+  // ---------- Heft-Checkboxen ----------
+  function heftCheck(checkbox, taskId){
+    if(checkbox.checked){ markDone(taskId); }
+    else { doneSet.delete(taskId); updateProgress(); }
+  }
+
+  // ---------- Multiple Choice (Station-Aufgaben) ----------
+  document.querySelectorAll('.mcTask').forEach(function(card){
+    var correct = card.getAttribute('data-correct');
+    var taskId = card.getAttribute('data-taskid');
+    var options = card.querySelectorAll('.option');
+    var explanation = card.querySelector('.explanation');
+    var inputs = card.querySelectorAll('input[type="radio"]');
+    inputs.forEach(function(input){
+      input.addEventListener('change', function(){
+        if(card.dataset.answered === 'true') return;
+        card.dataset.answered = 'true';
+        options.forEach(function(opt){
+          var val = opt.querySelector('input').value;
+          opt.style.pointerEvents = 'none';
+          if(val === correct){ opt.classList.add('correct'); }
+          else if(val === input.value){ opt.classList.add('incorrect'); }
+          else { opt.classList.add('dimmed'); }
+        });
+        explanation.innerHTML = '<strong>Erklärung:</strong> ' + explanation.getAttribute('data-text');
+        explanation.classList.add('show');
+        markDone(taskId);
+      });
+    });
+  });
+
+  // ---------- Lückentext ----------
+  function normalize(s){ return s.trim().toLowerCase().replace(/\s+/g,' '); }
+  function matches(value, answerStr){
+    var options = answerStr.split('|').map(normalize);
+    return options.indexOf(normalize(value)) !== -1;
+  }
+  function checkLueckentext(ids, taskId){
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      var ok = matches(el.value, el.getAttribute('data-answer'));
+      el.classList.remove('ok','bad');
+      el.classList.add(ok ? 'ok' : 'bad');
+    });
+    markDone(taskId);
+  }
+
+  // ---------- Zuordnung / Richtig-Falsch (Select) ----------
+  function checkZuordnung(ids, taskId){
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      var ok = matches(el.value, el.getAttribute('data-answer'));
+      el.classList.remove('ok','bad');
+      if(el.value !== ''){ el.classList.add(ok ? 'ok' : 'bad'); }
+    });
+    var expMap = { z1:'expZ', z2:'expZ', z3:'expZ', rf1:'expRF', rf2:'expRF', rf3:'expRF' };
+    var expId = expMap[ids[0]];
+    if(expId) document.getElementById(expId).classList.add('show');
+    markDone(taskId);
+  }
+
+  // ---------- Berechnungen ----------
+  function numMatches(value, answerStr){
+    var options = answerStr.split('|').map(function(s){ return parseFloat(s.replace(',', '.')); });
+    var v = parseFloat(String(value).replace(',', '.'));
+    if(isNaN(v)) return false;
+    return options.some(function(opt){ return Math.abs(opt - v) < 0.05; });
+  }
+  var calcExplanationMap = { c1:'expC12', c2:'expC12', c3:'expC34', c4:'expC34', c5:'expC5' };
+  function checkCalc(ids, taskId){
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      var ok = numMatches(el.value, el.getAttribute('data-answer'));
+      el.classList.remove('ok','bad');
+      el.classList.add(ok ? 'ok' : 'bad');
+      var expId = calcExplanationMap[id];
+      if(expId) document.getElementById(expId).classList.add('show');
+    });
+    markDone(taskId);
+  }
+
+  // ---------- Abschlusscheck Score ----------
+  var abschlussAnswered = 0;
+  function updateScoreBar(){
+    document.getElementById('scoreBar').textContent = 'Beantwortet: ' + abschlussAnswered + ' / 8';
+  }
+  document.querySelectorAll('#abschluss .mcTask').forEach(function(card){
+    var inputs = card.querySelectorAll('input[type="radio"]');
+    inputs.forEach(function(input){
+      input.addEventListener('change', function(){
+        if(card.dataset.scored !== 'true'){
+          card.dataset.scored = 'true';
+          abschlussAnswered++;
+          updateScoreBar();
+        }
+      });
+    });
+  });
+  document.getElementById('resetLink').addEventListener('click', function(){
+    document.querySelectorAll('#abschluss .mcTask').forEach(function(card){
+      card.dataset.answered = 'false';
+      card.dataset.scored = 'false';
+      card.querySelectorAll('.option').forEach(function(opt){
+        opt.classList.remove('correct','incorrect','dimmed');
+        opt.style.pointerEvents = 'auto';
+      });
+      card.querySelectorAll('input[type=radio]').forEach(function(r){ r.checked = false; });
+      card.querySelector('.explanation').classList.remove('show');
+      var tid = card.getAttribute('data-taskid');
+      doneSet.delete(tid);
+    });
+    abschlussAnswered = 0;
+    updateScoreBar();
+    updateProgress();
+  });
+
+  updateProgress();
+  updateFederSim();
+  updateGravSim();
+  updateAddSim();
+</script>
+
+</body>
+</html>
